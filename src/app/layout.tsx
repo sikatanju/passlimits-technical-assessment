@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
+import { TasksProvider } from "@/context/TaskContext";
 
 export default function RootLayout({
     children,
@@ -15,7 +16,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    {children}
+                    <TasksProvider>{children}</TasksProvider>
                 </ThemeProvider>
             </body>
         </html>
