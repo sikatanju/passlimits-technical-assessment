@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { use } from "react";
 import { Label } from "@/components/ui/label";
 import {
     Select,
@@ -23,16 +25,20 @@ import { ArrowLeft, Plus } from "lucide-react";
 import { Status, Task, useTasks } from "@/context/TaskContext";
 import Link from "next/link";
 
-const AddTaskPage = () => {
+const UpdateTaskPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const router = useRouter();
-    const { tasks, addTask } = useTasks();
-
-    const [newTask, setNewTask] = useState({
+    const { tasks, updateTask } = useTasks();
+    const { id } = use(params);
+    console.log(id);
+    const fallBackTask: Task = {
+        id: tasks.length,
         title: "",
         description: "",
         status: Status.Pending,
-        due_date: "",
-    });
+        due_date: new Date().getFullYear().toString(),
+    };
+    const taskk = tasks.find((task) => task.id === Number(id));
+    const [newTask, setNewTask] = useState(taskk ? taskk : fallBackTask);
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +64,7 @@ const AddTaskPage = () => {
             newErrors.title = "Title is required";
         }
 
-        if (!newTask.description.trim()) {
+        if (!newTask.description?.trim()) {
             newErrors.description = "Description is required";
         }
 
@@ -88,14 +94,7 @@ const AddTaskPage = () => {
         setIsSubmitting(true);
 
         try {
-            const newTaskk: Task = {
-                id: tasks.length,
-                title: newTask.title.trim(),
-                description: newTask.description.trim(),
-                status: newTask.status,
-                due_date: newTask.due_date,
-            };
-            addTask(newTaskk);
+            updateTask(newTask);
             router.push("/tasks");
         } catch (error) {
             console.error("Error adding task:", error);
@@ -300,4 +299,4 @@ const AddTaskPage = () => {
     );
 };
 
-export default AddTaskPage;
+export default UpdateTaskPage;

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -11,6 +12,8 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Status, useTasks } from "@/context/TaskContext";
+import { SquarePen } from "lucide-react";
+import Link from "next/link";
 
 const TasksPage = () => {
     const { tasks, updateTask, deleteTask } = useTasks();
@@ -75,6 +78,13 @@ const TasksPage = () => {
                             </TableCell>
                             <TableCell className="text-right">
                                 {task.due_date}
+                            </TableCell>
+                            <TableCell>
+                                <Link href={`/tasks/update/${task.id}`}>
+                                    <Button className="h-6 w-8">
+                                        <SquarePen />
+                                    </Button>
+                                </Link>
                             </TableCell>
                         </TableRow>
                     ))}
