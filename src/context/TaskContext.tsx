@@ -13,6 +13,7 @@ export interface Task {
     description: string;
     status: Status;
     due_date: string;
+    steps?: string;
 }
 
 interface TasksContextType {

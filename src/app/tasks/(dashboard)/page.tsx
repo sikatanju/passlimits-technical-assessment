@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -14,6 +13,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
+import {
     Table,
     TableBody,
     TableCaption,
@@ -22,15 +28,51 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Status, useTasks } from "@/context/TaskContext";
-import { SquarePen, Trash } from "lucide-react";
+import { Status, Task, useTasks } from "@/context/TaskContext";
+import { getSubTasks } from "@/lib/GetSubTasks";
+import { Lightbulb, SquarePen, Trash } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 const TasksPage = () => {
     const { tasks, updateTask, deleteTask } = useTasks();
+    const [isSubtasksOpen, setIsSubtasksOpen] = useState<boolean>(false);
+    const [selectedTask, setSelectedTask] = useState<Task>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [suggestedSubtasks, setSuggestedSubtasks] = useState<string>();
     const handleDelete = (taskId: number) => {
         deleteTask(taskId);
     };
+
+    const getSuggestions = async (taskId: number) => {
+        const task = tasks.find((t) => t.id === taskId);
+        const prompt = `Generate subtasks for the given task, Title: ${task?.title}, description: ${task?.description}, break it into subtasks, don't go into details, just the subtask would be fine.`;
+        setSelectedTask(task);
+        if (task && !task.steps) {
+            try {
+                const response = await getSubTasks(task, prompt);
+                console.log("Got it from the method: ", response);
+                task.steps = response;
+                setSuggestedSubtasks(response);
+            } catch (error) {
+                console.error("Error getting subtasks:", error);
+            } finally {
+                setIsLoading(false);
+            }
+            setIsSubtasksOpen(true);
+        } else if (task && task.steps) {
+            setIsSubtasksOpen(true);
+        }
+    };
+
+    const handleAcceptSubtasks = () => {
+        setIsSubtasksOpen(false);
+    };
+
+    if (tasks.length <= 0) {
+        return <div>No tasks to show.</div>;
+    }
+
     return (
         <div className="overflow-x-auto">
             <Table>
@@ -46,7 +88,7 @@ const TasksPage = () => {
                         </TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Due Date</TableHead>
-                        <TableHead>Actions</TableHead>
+                        <TableHead className="text-center">Actions</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -98,18 +140,24 @@ const TasksPage = () => {
                                 {task.due_date}
                             </TableCell>
                             <TableCell>
+                                <Button
+                                    className="h-6 w-6 bg-yellow-400 hover:bg-yellow-500 "
+                                    onClick={() => getSuggestions(task.id)}
+                                >
+                                    <Lightbulb className="h-3 w-3" />
+                                </Button>
                                 <Link
                                     href={`/tasks/update/${task.id}`}
-                                    className="m-0.5"
+                                    className="mx-1"
                                 >
-                                    <Button className="h-6 w-6 bg-green-300">
+                                    <Button className="h-6 w-6 bg-green-400 hover:bg-green-500">
                                         <SquarePen />
                                     </Button>
                                 </Link>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <Button
-                                            className="h-6 w-6 bg-red-400"
+                                            className="h-6 w-6 bg-red-400 hover:bg-red-500"
                                             value={task.id}
                                         >
                                             <Trash />
@@ -149,121 +197,35 @@ const TasksPage = () => {
                     ))}
                 </TableBody>
             </Table>
+            <Dialog open={isSubtasksOpen} onOpenChange={setIsSubtasksOpen}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>
+                            Suggested Subtasks for: {selectedTask?.title}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-3">
+                        {isLoading ? (
+                            <div>Generating subtasks...</div>
+                        ) : (
+                            <div className="p-3 border rounded">
+                                <p className="text-sm text-white">
+                                    {suggestedSubtasks}
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            variant={"outline"}
+                            onClick={handleAcceptSubtasks}
+                        >
+                            Close
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
-        /*
-        <div className="overflow-x-auto">
-            <Table>
-                <TableCaption>List of your tasks</TableCaption>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="hidden sm:table-cell">
-                            No.
-                        </TableHead>
-                        <TableHead className="">Title</TableHead>
-                        <TableHead className="hidden sm:table-cell md:w-[300px] lg:w-[400px]">
-                            Description
-                        </TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Due Date</TableHead>
-                        <TableHead>Actions</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    {tasks.map((task, index) => (
-                        <TableRow key={task.id}>
-                            <TableCell className="hidden sm:table-cell">
-                                {index + 1}
-                            </TableCell>
-                            <TableCell className="font-medium">
-                                {task.title}
-                            </TableCell>
-                            <TableCell className="hidden sm:table-cell">
-                                {task?.description}
-                            </TableCell>
-                            <TableCell>
-                                <select
-                                    defaultValue={task.status}
-                                    onChange={(e) => {
-                                        const statusValue = e.target.value;
-                                        console.log(statusValue);
-                                        const newTask = {
-                                            ...task,
-                                            status:
-                                                statusValue === "pending"
-                                                    ? Status.Pending
-                                                    : Status.Completed,
-                                        };
-                                        updateTask(newTask);
-                                        console.log(task);
-                                    }}
-                                >
-                                    <option key={"pending"} value={"pending"}>
-                                        Pending
-                                    </option>
-                                    <option
-                                        key={"completed"}
-                                        value={"completed"}
-                                    >
-                                        Completed
-                                    </option>
-                                </select>
-                            </TableCell>
-                            <TableCell className="text-right">
-                                {task.due_date}
-                            </TableCell>
-                            <TableCell>
-                                <Link
-                                    href={`/tasks/update/${task.id}`}
-                                    className="m-0.5"
-                                >
-                                    <Button className="h-6 w-6 bg-green-300">
-                                        <SquarePen />
-                                    </Button>
-                                </Link>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button
-                                            className="h-6 w-6 bg-red-400"
-                                            value={task.id}
-                                        >
-                                            <Trash />
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>
-                                                Are you absolutely sure?
-                                            </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone.
-                                                This will permanently delete
-                                                your task.
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>
-                                                Cancel
-                                            </AlertDialogCancel>
-
-                                            <AlertDialogAction
-                                                className={buttonVariants({
-                                                    variant: "destructive",
-                                                })}
-                                                onClick={() =>
-                                                    handleDelete(task.id)
-                                                }
-                                            >
-                                                Delete
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </div>*/
     );
 };
 
