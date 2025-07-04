@@ -10,7 +10,7 @@ export enum Status {
 export interface Task {
     id: number;
     title: string;
-    description?: string;
+    description: string;
     status: Status;
     due_date: string;
 }

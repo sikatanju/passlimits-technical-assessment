@@ -9,7 +9,7 @@ const TasksLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
             <div className="min-w-1/3 bg-white rounded-lg text-center mb-10">
                 <div className="text-3xl text-black">TaskNest</div>
             </div>
-            <div className="w-full flex flex-row flex-wrap justify-start items-start gap-2 p-2">
+            {/* <div className="w-full flex flex-row flex-wrap justify-start items-start gap-2 p-2">
                 <div>
                     <Button>All Tasks</Button>
                 </div>
@@ -19,8 +19,8 @@ const TasksLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
                 <div>
                     <Button>Completed Tasks</Button>
                 </div>
-            </div>
-            <div className="w-full flex flex-row flex-wrap justify-between items-start gap-2 mt-2 p-2">
+            </div> */}
+            <div className="w-full flex flex-row flex-wrap justify-between items-start gap-2 mt-2 lg:px-16 lg:mb-4">
                 <div className="text-md md:text-xl">Tasks List</div>
                 {/* <div>
                     <input

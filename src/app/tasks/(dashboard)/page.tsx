@@ -1,7 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { Button } from "@/components/ui/button";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -12,14 +23,16 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Status, useTasks } from "@/context/TaskContext";
-import { SquarePen } from "lucide-react";
+import { SquarePen, Trash } from "lucide-react";
 import Link from "next/link";
 
 const TasksPage = () => {
     const { tasks, updateTask, deleteTask } = useTasks();
-
+    const handleDelete = (taskId: number) => {
+        deleteTask(taskId);
+    };
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto w-full">
             <Table>
                 <TableCaption>List of your tasks</TableCaption>
                 <TableHeader>
@@ -80,11 +93,52 @@ const TasksPage = () => {
                                 {task.due_date}
                             </TableCell>
                             <TableCell>
-                                <Link href={`/tasks/update/${task.id}`}>
-                                    <Button className="h-6 w-8">
+                                <Link
+                                    href={`/tasks/update/${task.id}`}
+                                    className="m-0.5"
+                                >
+                                    <Button className="h-6 w-6 bg-green-300">
                                         <SquarePen />
                                     </Button>
                                 </Link>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            className="h-6 w-6 bg-red-400"
+                                            value={task.id}
+                                        >
+                                            <Trash />
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Are you absolutely sure?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                                This will permanently delete
+                                                your task.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+
+                                            <AlertDialogAction
+                                                className={buttonVariants({
+                                                    variant: "destructive",
+                                                })}
+                                                onClick={() =>
+                                                    handleDelete(task.id)
+                                                }
+                                            >
+                                                Delete
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </TableCell>
                         </TableRow>
                     ))}
