@@ -32,7 +32,126 @@ const TasksPage = () => {
         deleteTask(taskId);
     };
     return (
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto">
+            <Table>
+                <TableCaption>List of your tasks</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="hidden sm:table-cell">
+                            No.
+                        </TableHead>
+                        <TableHead className="w-48">Title</TableHead>
+                        <TableHead className="hidden sm:table-cell w-64">
+                            Description
+                        </TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Due Date</TableHead>
+                        <TableHead>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {tasks.map((task, index) => (
+                        <TableRow key={task.id}>
+                            <TableCell className="hidden sm:table-cell w-8">
+                                {index + 1}
+                            </TableCell>
+                            <TableCell className="font-medium md:w-36 lg:w-54 whitespace-normal">
+                                <div className="break-words">{task.title}</div>
+                            </TableCell>
+                            <TableCell className="hidden sm:table-cell md:w-3xl lg:w-4xl break-words whitespace-normal">
+                                <div className="break-words">
+                                    {task.description}
+                                </div>
+                            </TableCell>
+                            <TableCell className="w-6">
+                                <select
+                                    defaultValue={task.status}
+                                    onChange={(e) => {
+                                        const statusValue = e.target.value;
+                                        const newTask = {
+                                            ...task,
+                                            status:
+                                                statusValue === "pending"
+                                                    ? Status.Pending
+                                                    : Status.Completed,
+                                        };
+                                        updateTask(newTask);
+                                    }}
+                                >
+                                    <option
+                                        className="bg-black text-white"
+                                        key={"pending"}
+                                        value={"pending"}
+                                    >
+                                        Pending
+                                    </option>
+                                    <option
+                                        className="bg-black text-white"
+                                        key={"completed"}
+                                        value={"completed"}
+                                    >
+                                        Completed
+                                    </option>
+                                </select>
+                            </TableCell>
+                            <TableCell className="w-24">
+                                {task.due_date}
+                            </TableCell>
+                            <TableCell>
+                                <Link
+                                    href={`/tasks/update/${task.id}`}
+                                    className="m-0.5"
+                                >
+                                    <Button className="h-6 w-6 bg-green-300">
+                                        <SquarePen />
+                                    </Button>
+                                </Link>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button
+                                            className="h-6 w-6 bg-red-400"
+                                            value={task.id}
+                                        >
+                                            <Trash />
+                                        </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Are you absolutely sure?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone.
+                                                This will permanently delete
+                                                your task.
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Cancel
+                                            </AlertDialogCancel>
+
+                                            <AlertDialogAction
+                                                className={buttonVariants({
+                                                    variant: "destructive",
+                                                })}
+                                                onClick={() =>
+                                                    handleDelete(task.id)
+                                                }
+                                            >
+                                                Delete
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
+        /*
+        <div className="overflow-x-auto">
             <Table>
                 <TableCaption>List of your tasks</TableCaption>
                 <TableHeader>
@@ -144,7 +263,7 @@ const TasksPage = () => {
                     ))}
                 </TableBody>
             </Table>
-        </div>
+        </div>*/
     );
 };
 

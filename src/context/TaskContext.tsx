@@ -28,8 +28,9 @@ export const TasksProvider = ({ children }: { children: ReactNode }) => {
     const [tasks, setTasks] = useState<Task[]>([
         {
             id: 0,
-            title: "Dummy Task",
-            description: "Description for dummy task",
+            title: "Smart Task Manager (AI)",
+            description:
+                "Build a task management application using React/Next.js with smart AI-powered task suggestions using Google Gemini API.",
             status: Status.Completed,
             due_date: new Date().toISOString().split("T")[0],
         },
