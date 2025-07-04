@@ -297,8 +297,14 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                                         </>
                                     ) : (
                                         <>
-                                            <Plus className="h-4 w-4 mr-2" />
-                                            Add Task
+                                            <Plus className="h-4 w-4" />
+                                            {mode === "create" ? (
+                                                <div>Add</div>
+                                            ) : (
+                                                <div>
+                                                    Update
+                                                </div>
+                                            )}
                                         </>
                                     )}
                                 </Button>

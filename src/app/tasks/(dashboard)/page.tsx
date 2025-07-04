@@ -44,11 +44,12 @@ const TasksPage = () => {
         deleteTask(taskId);
     };
 
-    const getSuggestions = async (taskId: number) => {
-        const task = tasks.find((t) => t.id === taskId);
+    const getSuggestions = async (task: Task) => {
         const prompt = `Generate subtasks for the given task, Title: ${task?.title}, description: ${task?.description}, break it into subtasks, don't go into details, just the subtask would be fine.`;
         setSelectedTask(task);
         if (task && !task.steps) {
+            setIsLoading(true);
+            setIsSubtasksOpen(true);
             try {
                 const response = await getSubTasks(task, prompt);
                 console.log("Got it from the method: ", response);
@@ -59,16 +60,14 @@ const TasksPage = () => {
             } finally {
                 setIsLoading(false);
             }
-            setIsSubtasksOpen(true);
         } else if (task && task.steps) {
+            setSuggestedSubtasks(task.steps);
             setIsSubtasksOpen(true);
         }
     };
-
     const handleAcceptSubtasks = () => {
         setIsSubtasksOpen(false);
     };
-
     if (tasks.length <= 0) {
         return <div>No tasks to show.</div>;
     }
@@ -98,7 +97,11 @@ const TasksPage = () => {
                                 {index + 1}
                             </TableCell>
                             <TableCell className="font-medium md:w-36 lg:w-54 whitespace-normal">
-                                <div className="break-words">{task.title}</div>
+                                <Link href={`/tasks/${task.id}`}>
+                                    <div className="break-words hover:cursor-pointer hover:underline">
+                                        {task.title}
+                                    </div>
+                                </Link>
                             </TableCell>
                             <TableCell className="hidden sm:table-cell md:w-3xl lg:w-4xl break-words whitespace-normal">
                                 <div className="break-words">
@@ -107,6 +110,7 @@ const TasksPage = () => {
                             </TableCell>
                             <TableCell className="w-6">
                                 <select
+                                    className="hover:cursor-pointer"
                                     defaultValue={task.status}
                                     onChange={(e) => {
                                         const statusValue = e.target.value;
@@ -121,14 +125,14 @@ const TasksPage = () => {
                                     }}
                                 >
                                     <option
-                                        className="bg-black text-white"
+                                        className="bg-black text-white hover:cursor-pointer"
                                         key={"pending"}
                                         value={"pending"}
                                     >
                                         Pending
                                     </option>
                                     <option
-                                        className="bg-black text-white"
+                                        className="bg-black text-white hover:cursor-pointer"
                                         key={"completed"}
                                         value={"completed"}
                                     >
@@ -141,8 +145,8 @@ const TasksPage = () => {
                             </TableCell>
                             <TableCell>
                                 <Button
-                                    className="h-6 w-6 bg-yellow-400 hover:bg-yellow-500 "
-                                    onClick={() => getSuggestions(task.id)}
+                                    className="h-6 w-6 bg-yellow-400 hover:bg-yellow-500 hover:cursor-pointer"
+                                    onClick={() => getSuggestions(task)}
                                 >
                                     <Lightbulb className="h-3 w-3" />
                                 </Button>
@@ -150,14 +154,14 @@ const TasksPage = () => {
                                     href={`/tasks/update/${task.id}`}
                                     className="mx-1"
                                 >
-                                    <Button className="h-6 w-6 bg-green-400 hover:bg-green-500">
+                                    <Button className="h-6 w-6 bg-green-400 hover:bg-green-500 hover:cursor-pointer">
                                         <SquarePen />
                                     </Button>
                                 </Link>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
                                         <Button
-                                            className="h-6 w-6 bg-red-400 hover:bg-red-500"
+                                            className="h-6 w-6 bg-red-400 hover:bg-red-500 hover:cursor-pointer"
                                             value={task.id}
                                         >
                                             <Trash />
