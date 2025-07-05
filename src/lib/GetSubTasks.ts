@@ -12,11 +12,12 @@ export const getSubTasks = async (task: Task) => {
         });
 
         if (!response.ok) {
-            throw new Error(`Http error! status: ${response.status}`);
+            return { subtasks: undefined };
+        } else {
+            const data = await response.json();
+            console.log(data);
+            return data;
         }
-
-        const data = await response.json();
-        return data.subtasks;
     } catch (error) {
         console.error("Error Calling API", error);
         throw error;

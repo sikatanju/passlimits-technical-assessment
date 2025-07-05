@@ -39,19 +39,28 @@ const TasksPage = () => {
     const [selectedTask, setSelectedTask] = useState<Task>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [suggestedSubtasks, setSuggestedSubtasks] = useState<string>();
+    const [isError, setIsError] = useState<boolean>(false);
     const handleDelete = (taskId: number) => {
         deleteTask(taskId);
     };
 
     const getSuggestions = async (task: Task) => {
+        setIsError(false);
         setSelectedTask(task);
         if (task && !task.steps) {
             setIsLoading(true);
             setIsSubtasksOpen(true);
             try {
                 const response = await getSubTasks(task);
-                task.steps = response;
-                setSuggestedSubtasks(response);
+                if (response.subtasks) {
+                    task.steps = response.subtasks;
+                    setSuggestedSubtasks(response.subtasks);
+                } else {
+                    setIsError(true);
+                    setSuggestedSubtasks(
+                        "Server Error! Could not generate subtasks, please try again later :("
+                    );
+                }
             } catch (error) {
                 console.error("Error getting subtasks:", error);
             } finally {
@@ -210,9 +219,15 @@ const TasksPage = () => {
                             <div>Generating subtasks...</div>
                         ) : (
                             <div className="p-3 border rounded">
-                                <p className="text-sm text-white">
-                                    {suggestedSubtasks}
-                                </p>
+                                {isError ? (
+                                    <p className="text-sm text-red-500">
+                                        {suggestedSubtasks}
+                                    </p>
+                                ) : (
+                                    <p className="text-sm text-white">
+                                        {suggestedSubtasks}
+                                    </p>
+                                )}
                             </div>
                         )}
                     </div>

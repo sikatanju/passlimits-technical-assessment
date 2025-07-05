@@ -11,8 +11,9 @@ import React, { use, useState } from "react";
 const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = use(params);
     const { tasks, updateTask } = useTasks();
-    const router = useRouter();
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isError, setIsError] = useState<boolean>(false);
+    const router = useRouter();
     let tempTask = tasks.find((tt) => tt.id === Number(id));
     if (!tempTask) {
         tempTask = {
@@ -24,11 +25,16 @@ const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
         };
     }
     const generateSteps = async () => {
+        setIsError(false);
         try {
             setIsLoading(true);
             const response = await getSubTasks(tempTask);
-            tempTask.steps = response;
-            updateTask(tempTask);
+            if (response.subtasks) {
+                tempTask.steps = response.subtasks;
+                updateTask(tempTask);
+            } else {
+                setIsError(true);
+            }
         } catch (error) {
             console.error("Error getting subtasks:", error);
         } finally {
@@ -112,6 +118,12 @@ const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                                         Suggest Subtasks
                                     </Button>
                                 )}
+                            </div>
+                        )}
+                        {isError && (
+                            <div className="text-red-500 text-sm">
+                                Server Error! Could not generate subtasks,
+                                please try again later :(
                             </div>
                         )}
                     </CardContent>
