@@ -1,15 +1,23 @@
 import { Task } from "@/context/TaskContext";
-import { ai } from "./utils";
 
 export const getSubTasks = async (task: Task, prompt: string) => {
-    const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-        config: {
-            thinkingConfig: {
-                thinkingBudget: 0,
+    try {
+        const response = await fetch("/api/generate-subtasks", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
             },
-        },
-    });
-    return response.text;
+            body: JSON.stringify({ task, prompt }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Http error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        return data.subtasks;
+    } catch (error) {
+        console.error("Error Calling API", error);
+        throw error;
+    }
 };

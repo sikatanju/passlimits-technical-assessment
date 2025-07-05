@@ -10,7 +10,7 @@ const LandingPage = () => {
                     <div className="text-center">
                         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                             Task Management <br className="hidden sm:block" />
-                            <span className="text-amber-100 dark:text-amber-200">
+                            <span className="text-amber-100 dark:text-amber-100">
                                 simplified
                             </span>
                         </h1>
@@ -20,7 +20,9 @@ const LandingPage = () => {
                         </p>
                         <div className="mt-10">
                             <Link href="/tasks">
-                                <Button className="lg">Get Started</Button>
+                                <Button className="lg hover:cursor-pointer">
+                                    Get Started
+                                </Button>
                             </Link>
                         </div>
                     </div>

@@ -177,7 +177,9 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                                         )
                                     }
                                     className={
-                                        errors.title ? "border-red-500" : ""
+                                        errors.title
+                                            ? "border-red-500 mt-1"
+                                            : "mt-1"
                                     }
                                 />
                                 {errors.title && (
@@ -202,7 +204,7 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                                             e.target.value
                                         )
                                     }
-                                    className={`min-h-[100px] resize-none ${
+                                    className={`mt-1 min-h-[100px] resize-none ${
                                         errors.description
                                             ? "border-red-500"
                                             : ""
@@ -218,36 +220,41 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="status">Status</Label>
-                                    <Select
-                                        value={newTask.status}
-                                        onValueChange={(value) =>
-                                            handleInputChange("status", value)
-                                        }
-                                    >
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="Select status" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem
-                                                key={"pending"}
-                                                value={Status.Pending}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                                                    Pending
-                                                </div>
-                                            </SelectItem>
-                                            <SelectItem
-                                                key={"completed"}
-                                                value={Status.Completed}
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                                    Completed
-                                                </div>
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className="mt-1">
+                                        <Select
+                                            value={newTask.status}
+                                            onValueChange={(value) =>
+                                                handleInputChange(
+                                                    "status",
+                                                    value
+                                                )
+                                            }
+                                        >
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="Select status" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem
+                                                    key={"pending"}
+                                                    value={Status.Pending}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                                        Pending
+                                                    </div>
+                                                </SelectItem>
+                                                <SelectItem
+                                                    key={"completed"}
+                                                    value={Status.Completed}
+                                                >
+                                                    <div className="flex items-center gap-2">
+                                                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                                        Completed
+                                                    </div>
+                                                </SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
 
                                 <div className="space-y-2">
@@ -255,27 +262,29 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                                         Due Date{" "}
                                         <span className="text-red-500">*</span>
                                     </Label>
-                                    <Input
-                                        id="due_date"
-                                        type="date"
-                                        value={newTask.due_date}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "due_date",
-                                                e.target.value
-                                            )
-                                        }
-                                        className={
-                                            errors.due_date
-                                                ? "border-red-500"
-                                                : ""
-                                        }
-                                        min={
-                                            new Date()
-                                                .toISOString()
-                                                .split("T")[0]
-                                        }
-                                    />
+                                    <div className="mt-1">
+                                        <Input
+                                            id="due_date"
+                                            type="date"
+                                            value={newTask.due_date}
+                                            onChange={(e) =>
+                                                handleInputChange(
+                                                    "due_date",
+                                                    e.target.value
+                                                )
+                                            }
+                                            className={
+                                                errors.due_date
+                                                    ? "border-red-500"
+                                                    : ""
+                                            }
+                                            min={
+                                                new Date()
+                                                    .toISOString()
+                                                    .split("T")[0]
+                                            }
+                                        />
+                                    </div>
                                     {errors.due_date && (
                                         <p className="text-sm text-red-500">
                                             {errors.due_date}
@@ -301,9 +310,7 @@ const TaskForm = ({ mode, taskId }: TaskFormProps) => {
                                             {mode === "create" ? (
                                                 <div>Add</div>
                                             ) : (
-                                                <div>
-                                                    Update
-                                                </div>
+                                                <div>Update</div>
                                             )}
                                         </>
                                     )}

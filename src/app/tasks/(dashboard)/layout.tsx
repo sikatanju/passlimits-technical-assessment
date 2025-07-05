@@ -6,7 +6,7 @@ import React from "react";
 const TasksLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
     return (
         <div className="grid grid-cols-1 p-5 mx-auto my-2 justify-center items-center place-items-center md:max-w-full lg:max-w-3/4">
-            <div className="min-w-1/3 bg-white rounded-lg text-center mb-10">
+            <div className="min-w-1/3 bg-gray-200 rounded-lg text-center mb-10">
                 <div className="text-3xl text-black">TaskNest</div>
             </div>
             <div className="w-full flex flex-row flex-wrap justify-between items-start gap-2 my-3">

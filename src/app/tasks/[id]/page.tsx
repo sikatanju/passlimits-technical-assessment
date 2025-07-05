@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -25,11 +24,10 @@ const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
         };
     }
     const generateSteps = async () => {
-        const prompt = `Generate subtasks for the given task, Title: ${tempTask?.title}, description: ${tempTask?.description}, break it into subtasks, don't go into details, just the subtask would be fine.`;
+        const prompt = `Generate subtasks for the given task, Title: ${tempTask?.title}, description: ${tempTask?.description}, break it into 3-5 smaller actionable steps, don't go into details, just the steps would suffice.`;
         try {
             setIsLoading(true);
             const response = await getSubTasks(tempTask, prompt);
-            console.log("Got it from the method: ", response);
             tempTask.steps = response;
             updateTask(tempTask);
         } catch (error) {
@@ -112,7 +110,7 @@ const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
                                         className="hover:cursor-pointer"
                                         onClick={() => generateSteps()}
                                     >
-                                        Generate Steps
+                                        Suggest Subtasks
                                     </Button>
                                 )}
                             </div>
