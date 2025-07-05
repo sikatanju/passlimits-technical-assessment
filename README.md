@@ -61,7 +61,7 @@ npm install
 ```
 
 <h3>4. Set up environment variables:</h3>
-<h3>★ Create a `.env` file in the root directory and add your Google Gemini API key (make sure to delete `.env.local` or add same API key to `.env.local` before running the developement surver) :</h3>
+<h3>★ Create a `.env` file in the root directory and add your Google Gemini API key (make sure to delete `.env.example` or add same environment variables to `.env.example` before running the developement surver) :</h3>
 
 ```.env
 GEMINI_API_KEY=your_api_key_here
