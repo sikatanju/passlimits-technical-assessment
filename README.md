@@ -25,12 +25,11 @@
 
 <h2>🛠️ Tech Stack</h2>
 
-
 [![Next.JS](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6.svg?style=for-the-badge&logo=TypeScript&logoColor=white)](#)
 [![Google Gemini](https://img.shields.io/badge/Google%20Gemini-886FBF?style=for-the-badge&logo=googlegemini&logoColor=fff)](#)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-grey?style=for-the-badge&logo=tailwind-css&logoColor=38B2AC)](#)
-[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff&style=for-the-badge)](#) 
+[![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-000?logo=shadcnui&logoColor=fff&style=for-the-badge)](#)
 
 <ul>
   <h3><li><b>Frontend:</b> Next.js, TypeScript</li></h3>
@@ -48,21 +47,24 @@
 ```bash
 git clone https://github.com/sikatanju/passlimits-technical-assessment.git
 ```
+
 <h3>2. Navigate to the project directory:</h3>
 
 ```bash
 cd passlimits-technical-assessment
 ```
+
 <h3>3. Install dependencies:</h3>
 
 ```bash
 npm install
 ```
+
 <h3>4. Set up environment variables:</h3>
 <h3>Create a .env file in the root directory and add your Google Gemini API key:</h3>
 
 ```.env
-GOOGLE_GEMINI_API_KEY=your_api_key_here
+GEMINI_API_KEY=your_api_key_here
 ```
 
 <h3>5. Start the development server:</h3>
@@ -75,9 +77,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-
 <br />
 
 <h2>📝 License</h2>
 
-<h3>This project is licensed under the MIT License - see the LICENSE file for details.</p> 
+<h3>This project is licensed under the MIT License - see the LICENSE file for details.</p>
