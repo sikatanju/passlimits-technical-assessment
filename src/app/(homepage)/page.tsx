@@ -20,7 +20,7 @@ const LandingPage = () => {
                         </p>
                         <div className="mt-10">
                             <Link href="/tasks">
-                                <Button className="lg hover:cursor-pointer">
+                                <Button className="lg">
                                     Get Started
                                 </Button>
                             </Link>
