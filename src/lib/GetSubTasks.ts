@@ -1,6 +1,7 @@
 import { Task } from "@/context/TaskContext";
 
-export const getSubTasks = async (task: Task, prompt: string) => {
+export const getSubTasks = async (task: Task) => {
+    const prompt = `Generate subtasks for the given task, Title: ${task?.title}, description: ${task?.description}, break it into subtasks, don't go into details and add any heading, just generate a list of subtasks (separated by comma) would be fine.`;
     try {
         const response = await fetch("/api/generate-subtasks", {
             method: "POST",

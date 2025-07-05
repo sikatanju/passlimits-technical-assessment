@@ -24,10 +24,9 @@ const TaskDetailPage = ({ params }: { params: Promise<{ id: string }> }) => {
         };
     }
     const generateSteps = async () => {
-        const prompt = `Generate subtasks for the given task, Title: ${tempTask?.title}, description: ${tempTask?.description}, break it into 3-5 smaller actionable steps, don't go into details, just the steps would suffice.`;
         try {
             setIsLoading(true);
-            const response = await getSubTasks(tempTask, prompt);
+            const response = await getSubTasks(tempTask);
             tempTask.steps = response;
             updateTask(tempTask);
         } catch (error) {

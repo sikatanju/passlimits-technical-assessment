@@ -44,14 +44,12 @@ const TasksPage = () => {
     };
 
     const getSuggestions = async (task: Task) => {
-        const prompt = `Generate subtasks for the given task, Title: ${task?.title}, description: ${task?.description}, break it into subtasks, don't go into details, just the subtask would be fine.`;
         setSelectedTask(task);
         if (task && !task.steps) {
             setIsLoading(true);
             setIsSubtasksOpen(true);
             try {
-                const response = await getSubTasks(task, prompt);
-                console.log("Got it from the method: ", response);
+                const response = await getSubTasks(task);
                 task.steps = response;
                 setSuggestedSubtasks(response);
             } catch (error) {
