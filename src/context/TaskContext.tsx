@@ -39,6 +39,9 @@ export const TasksProvider = ({ children }: { children: ReactNode }) => {
     const addTask = (task: Task) => setTasks((prev) => [...prev, task]);
 
     const updateTask = (updated: Task) => {
+        if (updated.steps) {
+            updated.steps = "";
+        }
         setTasks((prev) =>
             prev.map((task) => (task.id === updated.id ? updated : task))
         );
